@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>The Binder's Quest — 4 Page Button Test</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#08080a}
+body{font-family:Georgia,serif}
+#app{min-height:100svh;display:flex;justify-content:center;align-items:flex-start}
+.stage{position:relative;width:min(100vw,430px);background:#08080a;overflow:hidden}
+.screen{display:block;width:100%;height:auto}
+.hot{position:absolute;border:0;background:transparent;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.path.selected{outline:4px solid #efbc4c;outline-offset:-4px;border-radius:9px;box-shadow:0 0 18px rgba(239,188,76,.95)}
+.toast{position:absolute;left:8%;right:8%;bottom:7%;z-index:20;padding:12px 10px;background:rgba(87,23,16,.96);border:2px solid #d7a83f;color:#ffe5a7;text-align:center;border-radius:8px;font:bold 14px Georgia;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+.modal{position:absolute;inset:0;z-index:30;background:rgba(0,0,0,.68);display:flex;align-items:center;justify-content:center;padding:28px}
+.box{width:100%;background:#ead5a1;border:3px solid #5b3314;outline:2px solid #c89535;border-radius:9px;padding:22px;text-align:center;color:#28170d}
+.box h2{margin:0 0 8px;color:#7b201b}
+.box button{width:100%;padding:12px;margin-top:10px;background:#9b2419;color:#ffe7a5;border:2px solid #d3a23b;border-radius:7px;font:bold 15px Georgia}
+.path-state{
+ position:absolute;left:35%;right:28%;top:52.0%;height:9.0%;z-index:8;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ background:rgba(236,211,158,.96);border:2px solid #b28632;border-radius:7px;
+ color:#4a1c16;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.18);
+}
+.path-state .name{font:bold 18px Georgia;color:#6f1714}
+.path-state .range{font:bold 13px Georgia;margin-top:5px;color:#23150d}
+</style>
+</head>
+<body><div id="app"></div>
+<script>
+const app=document.getElementById('app');
+let s={screen:1,path:null,msg:'',modal:''};
+
+const paths={
+ apprentice:{name:'APPRENTICE', die:'D6', range:'£1–£6 per quest'},
+ scholar:{name:'SCHOLAR', die:'D10', range:'£1–£10 per quest'},
+ alchemist:{name:'ALCHEMIST', die:'D16', range:'£1–£16 per quest'},
+ master:{name:'MASTER BUDGETBINDER', die:'D20', range:'£1–£20 per quest'}
+};
+
+function hot(action,style,cls=''){
+ return `<button class="hot ${cls}" data-action="${action}" style="${style}" aria-label="${action}"></button>`;
+}
+function popup(title,text){
+ return `<div class="modal"><div class="box"><h2>${title}</h2><p>${text}</p><button data-action="close-modal">RETURN</button></div></div>`;
+}
+function render(){
+ if(s.screen===1){
+   app.innerHTML=`<div class="stage">
+    <img class="screen" src="assets/01_welcome.png" alt="Welcome">
+    ${hot('next','left:10%;right:10%;top:89%;height:7%')}
+   </div>`; return;
+ }
+ if(s.screen===2){
+   app.innerHTML=`<div class="stage">
+    <img class="screen" src="assets/02_how_it_works.png" alt="How It Works">
+    ${hot('next','left:13%;right:13%;top:91.5%;height:6%')}
+   </div>`; return;
+ }
+ if(s.screen===3){
+   const selected=p=>s.path===p?'path selected':'path';
+   app.innerHTML=`<div class="stage">
+    <img class="screen" src="assets/03_choose_your_path.png" alt="Choose Your Path">
+    ${hot('pick-apprentice','left:3%;right:3%;top:37.1%;height:13.6%',selected('apprentice'))}
+    ${hot('pick-scholar','left:3%;right:3%;top:50.2%;height:13.7%',selected('scholar'))}
+    ${hot('pick-alchemist','left:3%;right:3%;top:62.7%;height:13.7%',selected('alchemist'))}
+    ${hot('pick-master','left:3%;right:3%;top:75.8%;height:13.7%',selected('master'))}
+    ${hot('confirm','left:14%;right:14%;top:91.0%;height:5.8%')}
+    ${s.msg?`<div class="toast">${s.msg}</div>`:''}
+   </div>`; return;
+ }
+
+ const p = s.path || 'apprentice';
+ const pathData = paths[p];
+ const nonApprentice = p !== 'apprentice'
+   ? `<div class="path-state"><div class="name">${pathData.name}</div><div class="range">${pathData.die} · ${pathData.range}</div></div>`
+   : '';
+
+ app.innerHTML=`<div class="stage">
+  <img class="screen" src="assets/04_home.png" alt="Home">
+  ${nonApprentice}
+  ${hot('change-path','left:70%;right:10%;top:53.5%;height:6.7%')}
+  ${hot('start-quest','left:11%;right:11%;top:80.5%;height:6.0%')}
+  ${hot('home','left:5%;width:18%;top:91.0%;height:8.5%')}
+  ${hot('pouch','left:23%;width:19%;top:91.0%;height:8.5%')}
+  ${hot('quest','left:42%;width:19%;top:91.0%;height:8.5%')}
+  ${hot('cabinet','left:61%;width:19%;top:91.0%;height:8.5%')}
+  ${hot('profile','left:80%;width:16%;top:91.0%;height:8.5%')}
+  ${s.msg?`<div class="toast">${s.msg}</div>`:''}
+  ${s.modal==='start'?popup('QUEST AREA','Button working. Page 5 has not been designed yet, so the test stops here.') : ''}
+ </div>`;
+}
+
+app.addEventListener('click',e=>{
+ const b=e.target.closest('[data-action]'); if(!b)return;
+ const a=b.dataset.action;
+ s.msg='';
+
+ if(a==='next'){ s.screen++; }
+ else if(a.startsWith('pick-')){ s.path=a.slice(5); }
+ else if(a==='confirm'){
+   if(!s.path){ s.msg='Choose your Path first.'; render(); return; }
+   s.screen=4;
+ }
+ else if(a==='change-path'){ s.screen=3; }
+ else if(a==='start-quest'){ s.modal='start'; }
+ else if(a==='close-modal'){ s.modal=''; }
+ else if(a==='home'){ s.msg='You are already on Home.'; }
+ else if(a==='pouch'){ s.msg='Pouch button works — page not designed yet.'; }
+ else if(a==='quest'){ s.msg='Quest button works — page not designed yet.'; }
+ else if(a==='cabinet'){ s.msg='Cabinet button works — page not designed yet.'; }
+ else if(a==='profile'){ s.msg='Profile button works — page not designed yet.'; }
+
+ render(); window.scrollTo(0,0);
+});
+
+render();
+</script>
+</body></html>
