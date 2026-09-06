@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Binder's Quest — Path Test</title>
+<style>
+html,body{margin:0;background:#111;height:100%;font-family:Georgia,serif}
+#app{min-height:100%;display:flex;justify-content:center;align-items:flex-start}
+.screen{position:relative;width:min(100vw,520px);line-height:0}
+.screen img{display:block;width:100%;height:auto}
+.hotspot{position:absolute;cursor:pointer;background:rgba(255,215,0,0);border:0;padding:0}
+.hotspot.selected{outline:3px solid rgba(218,165,32,.95);outline-offset:-4px;border-radius:8px;background:rgba(255,215,0,.05)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2a1708;color:#f6dfaa;
+ border:1px solid #a97a2e;border-radius:8px;padding:12px 18px;max-width:80vw;text-align:center;
+ box-shadow:0 5px 20px #0008;display:none;z-index:99;line-height:1.3}
+</style>
+</head>
+<body>
+<div id="app"></div><div id="toast"></div>
+<script>
+const A="assets/";
+let page=1, selectedPath=localStorage.getItem("binderPath")||"apprentice";
+
+const screens={
+  1:A+"page1_welcome.jpg",
+  2:A+"page2_how_it_works.jpg",
+  3:A+"page3_choose_path.jpg",
+  4:{
+    apprentice:A+"page4_apprentice.jpg",
+    scholar:A+"page4_scholar.jpg",
+    alchemist:A+"page4_alchemist.jpg",
+    master:A+"page4_master.jpg"
+  }
+};
+
+function hs(cls, left, top, width, height, fn, title){
+  const b=document.createElement("button");
+  b.className="hotspot "+(cls||"");
+  b.style.left=left+"%"; b.style.top=top+"%"; b.style.width=width+"%"; b.style.height=height+"%";
+  b.onclick=fn; if(title) b.title=title; return b;
+}
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg;t.style.display="block";
+  clearTimeout(window._tt); window._tt=setTimeout(()=>t.style.display="none",2200);
+}
+function render(){
+  const app=document.getElementById("app"); app.innerHTML="";
+  const s=document.createElement("div"); s.className="screen";
+  const img=document.createElement("img");
+  img.src = page===4 ? screens[4][selectedPath] : screens[page];
+  s.appendChild(img);
+
+  if(page===1){
+    s.appendChild(hs("",10,88,80,7,()=>{page=2;render()},"Begin my journey"));
+  } else if(page===2){
+    s.appendChild(hs("",17,91,66,6,()=>{page=3;render()},"Continue"));
+  } else if(page===3){
+    const cards=[
+      ["apprentice",37.1,13.6],["scholar",50.2,13.7],
+      ["alchemist",62.7,13.7],["master",75.8,13.7]
+    ];
+    cards.forEach(([p,t,h])=>{
+      s.appendChild(hs(selectedPath===p?"selected":"",5,t,90,h,()=>{selectedPath=p;render()},p));
+    });
+    s.appendChild(hs("",17,91,66,5.8,()=>{
+      localStorage.setItem("binderPath",selectedPath); page=4; render();
+    },"Confirm my path"));
+  } else if(page===4){
+    // These four uploaded page states share the same layout.
+    s.appendChild(hs("",64,47,25,9,()=>{page=3;render()},"Change path"));
+    s.appendChild(hs("",12,75,76,7,()=>toast("Page 5 — Quest screen is not built yet."),"Start my quest"));
+    // Bottom nav placeholders
+    s.appendChild(hs("",4,91,18,8,()=>toast("Home"),"Home"));
+    s.appendChild(hs("",22,91,18,8,()=>toast("Potion Pouch — coming next"),"Pouch"));
+    s.appendChild(hs("",40,91,18,8,()=>toast("Quest — coming next"),"Quest"));
+    s.appendChild(hs("",58,91,20,8,()=>toast("Potion Cabinet — coming next"),"Cabinet"));
+    s.appendChild(hs("",78,91,18,8,()=>toast("Profile — coming later"),"Profile"));
+  }
+  app.appendChild(s);
+}
+render();
+</script>
+</body>
+</html>
