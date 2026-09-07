@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>The Binder's Quest — 5 Page Test V3</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#08080a}
+body{font-family:Georgia,serif}
+#app{min-height:100svh;display:flex;justify-content:center;align-items:flex-start}
+.stage{position:relative;width:min(100vw,430px);background:#08080a;overflow:hidden}
+.screen{display:block;width:100%;height:auto}
+.hot{position:absolute;border:0;background:transparent;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.path.selected{outline:4px solid #efbc4c;outline-offset:-4px;border-radius:9px}
+.toast{position:absolute;left:8%;right:8%;bottom:7%;z-index:20;padding:12px;background:rgba(128,27,20,.97);
+border:2px solid #d7a83f;color:#ffe5a7;text-align:center;border-radius:8px;font:bold 14px Georgia}
+</style>
+</head>
+<body><div id="app"></div>
+<script>
+const app=document.getElementById('app');
+let s={screen:1,path:localStorage.getItem('binderPath')||null,msg:''};
+const A='assets/';
+function hot(action,style,cls=''){return `<button class="hot ${cls}" data-action="${action}" style="${style}" aria-label="${action}"></button>`}
+function render(){
+ let out='';
+ if(s.screen===1){
+  out=`<div class="stage"><img class="screen" src="${A}01_welcome.jpg?v=3">
+  ${hot('next','left:10%;right:10%;top:88%;height:9%')}</div>`;
+ } else if(s.screen===2){
+  out=`<div class="stage"><img class="screen" src="${A}02_how_it_works.jpg?v=3">
+  ${hot('next','left:12%;right:12%;top:90%;height:8%')}</div>`;
+ } else if(s.screen===3){
+  const sel=p=>s.path===p?'path selected':'path';
+  out=`<div class="stage"><img class="screen" src="${A}03_choose_your_path.jpg?v=3">
+  ${hot('pick-apprentice','left:3%;right:3%;top:37.1%;height:13.6%',sel('apprentice'))}
+  ${hot('pick-scholar','left:3%;right:3%;top:50.2%;height:13.7%',sel('scholar'))}
+  ${hot('pick-alchemist','left:3%;right:3%;top:62.7%;height:13.7%',sel('alchemist'))}
+  ${hot('pick-master','left:3%;right:3%;top:75.8%;height:13.7%',sel('master'))}
+  ${hot('confirm','left:12%;right:12%;top:90.3%;height:7.2%')}
+  ${s.msg?`<div class="toast">${s.msg}</div>`:''}</div>`;
+ } else if(s.screen===4){
+  const p=s.path||'apprentice';
+  out=`<div class="stage"><img class="screen" src="${A}04_home_${p}.jpg?v=3">
+  ${hot('change-path','left:65%;right:5%;top:47%;height:11%')}
+  ${hot('to-potion','left:5%;right:5%;top:76%;height:12%')}
+  </div>`;
+ } else if(s.screen===5){
+  out=`<div class="stage"><img class="screen" src="${A}05_potion_01.jpg?v=3">
+  ${hot('page5-start','left:5%;right:5%;top:73%;height:12%')}
+  ${s.msg?`<div class="toast">${s.msg}</div>`:''}</div>`;
+ }
+ app.innerHTML=out;
+}
+app.addEventListener('click',e=>{
+ const b=e.target.closest('[data-action]'); if(!b)return;
+ const a=b.dataset.action;
+ if(a==='next') s.screen++;
+ else if(a.startsWith('pick-')){s.path=a.slice(5);localStorage.setItem('binderPath',s.path);}
+ else if(a==='confirm'){if(!s.path){s.msg='Choose your Path first.';}else{s.screen=4;s.msg='';}}
+ else if(a==='change-path'){s.screen=3;s.msg='';}
+ else if(a==='to-potion'){s.screen=5;s.msg='';}
+ else if(a==='page5-start'){s.msg='Page 5 is connected. Quest 1 will be built next.';}
+ render(); window.scrollTo(0,0);
+});
+render();
+</script>
+</body></html>
