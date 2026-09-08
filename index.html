@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Binder's Quest — Page 5 Responsive Prototype</title>
+<style>
+:root{
+  --ink:#30180d; --red:#781914; --navy:#18344f; --gold:#a46d16;
+  --paper:#efd39a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#090909;color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+body{display:flex;justify-content:center}
+.page{
+  width:min(100%,760px);
+  min-height:100svh;
+  background-image:url("assets/background.jpg");
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  padding:clamp(34px,7vw,68px) clamp(25px,7vw,58px) 0;
+  position:relative;
+  overflow:hidden;
+}
+header{text-align:center}
+.kicker{font-weight:800;color:var(--red);font-size:clamp(24px,7vw,46px);letter-spacing:.02em}
+.title{margin:.12em 0 0;color:var(--red);font-weight:800;font-size:clamp(27px,7.5vw,50px);line-height:1.02}
+.alias{margin:.55em 0 0;color:var(--navy);font-weight:800;font-size:clamp(18px,5.2vw,30px)}
+.hero{display:block;width:min(96%,650px);height:auto;margin:10px auto 4px}
+.section-title{text-align:center;color:var(--red);font-weight:800;font-size:clamp(24px,6.2vw,38px);margin:4px 0 2px}
+.count{text-align:center;color:var(--navy);font-weight:800;font-size:clamp(18px,4.8vw,27px);margin-bottom:14px}
+.ingredients{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{
+  min-height:145px;border:1.5px solid rgba(95,55,18,.65);border-radius:10px;
+  background:rgba(245,220,167,.38);display:grid;grid-template-columns:42% 58%;
+  align-items:center;padding:10px;
+}
+.card img{width:100%;height:112px;object-fit:contain}
+.name{font-weight:800;text-align:center;font-size:clamp(15px,3.8vw,22px);line-height:1.18}
+.qty{text-align:center;color:var(--red);font-weight:800;font-size:clamp(18px,4.8vw,26px);margin-top:8px}
+.progress{text-align:center;color:var(--navy);font-weight:800;font-size:clamp(19px,5vw,28px);margin:24px 0 14px}
+.principle{border:1.5px solid rgba(95,55,18,.65);border-radius:10px;background:rgba(245,220,167,.42);
+  text-align:center;padding:14px;margin:0 auto 18px}
+.principle strong{display:block;color:var(--red);font-size:clamp(17px,4.4vw,24px)}
+.principle em{display:block;font-size:clamp(17px,4.4vw,24px);margin-top:8px}
+.start{
+  display:block;width:88%;margin:0 auto 18px;border:2px solid #c99535;border-radius:9px;
+  background:#821914;color:#ffe9ae;font-family:Georgia,serif;font-weight:800;
+  font-size:clamp(22px,6vw,34px);padding:14px 12px;box-shadow:0 2px 0 #4a160e;
+}
+.note{text-align:center;font-style:italic;font-size:clamp(15px,3.7vw,20px);line-height:1.35;margin:0 auto 18px;max-width:620px}
+.navwrap{margin:0 calc(clamp(25px,7vw,58px) * -1);position:relative}
+.navwrap img{display:block;width:100%;height:auto}
+.navhot{position:absolute;top:0;bottom:0;width:20%;border:0;background:transparent}
+.navhot:nth-of-type(1){left:0}.navhot:nth-of-type(2){left:20%}.navhot:nth-of-type(3){left:40%}.navhot:nth-of-type(4){left:60%}.navhot:nth-of-type(5){left:80%}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#781914;color:#ffe9ae;
+ border:2px solid #c99535;padding:12px 18px;border-radius:8px;font-weight:700;display:none;z-index:10}
+@media(max-width:430px){
+ .page{padding-left:18px;padding-right:18px}
+ .ingredients{gap:8px}
+ .card{min-height:130px;padding:7px;grid-template-columns:40% 60%}
+ .card img{height:96px}
+ .navwrap{margin-left:-18px;margin-right:-18px}
+}
+@media(min-width:700px){
+ .ingredients{gap:16px}
+ .card{min-height:180px}
+ .card img{height:145px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+<header>
+  <div class="kicker">POTION No. 01</div>
+  <h1 class="title">THE DRAUGHT OF FORTUITY</h1>
+  <div class="alias">THE FIRST FORTUNE</div>
+</header>
+
+<img class="hero" src="assets/hero.png" alt="The Draught of Fortuity">
+
+<section>
+  <h2 class="section-title">YOUR POTION POUCH</h2>
+  <div class="count">0 / 10 INGREDIENTS</div>
+  <div class="ingredients">
+    <div class="card"><img src="assets/feather.png"><div><div class="name">GILDED GRIFFIN<br>FEATHER</div><div class="qty">×2</div></div></div>
+    <div class="card"><img src="assets/mooncap.png"><div><div class="name">MOONCAP<br>MUSHROOM</div><div class="qty">×2</div></div></div>
+    <div class="card"><img src="assets/pennywort.png"><div><div class="name">PENNYWORT<br>SPRIG</div><div class="qty">×2</div></div></div>
+    <div class="card"><img src="assets/coinberries.png"><div><div class="name">COINBERRIES</div><div class="qty">×2</div></div></div>
+    <div class="card"><img src="assets/shard.png"><div><div class="name">SHARD OF<br>FORTUNE</div><div class="qty">×1</div></div></div>
+    <div class="card"><img src="assets/essence.png"><div><div class="name">ESSENCE OF<br>INTENTION</div><div class="qty">×1</div></div></div>
+  </div>
+</section>
+
+<div class="progress">QUESTS COMPLETED: 0 / 5</div>
+<div class="principle"><strong>ORDER PRINCIPLE I</strong><em>“Small fortunes become great ones.”</em></div>
+
+<button class="start" id="start">START MY QUEST</button>
+<p class="note">Collect all the ingredients, complete the quests and brew the Draught of Fortuity.</p>
+
+<div class="navwrap">
+  <img src="assets/nav.png" alt="Home, Pouch, Quest, Cabinet and Profile navigation">
+  <button class="navhot" aria-label="Home"></button><button class="navhot" aria-label="Pouch"></button>
+  <button class="navhot" aria-label="Quest"></button><button class="navhot" aria-label="Cabinet"></button>
+  <button class="navhot" aria-label="Profile"></button>
+</div>
+</main>
+<div class="toast" id="toast">Responsive Page 5 is working.</div>
+<script>
+document.getElementById('start').onclick=()=>{const t=document.getElementById('toast');t.style.display='block';setTimeout(()=>t.style.display='none',1800)}
+</script>
+</body>
+</html>
