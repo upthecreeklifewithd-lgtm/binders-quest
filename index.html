@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Budgetbinders Potion Quest — Pages 1–5 Test</title>
+<style>
+html,body{margin:0;background:#111;min-height:100%;font-family:Georgia,serif}
+#stage{width:min(100%,900px);margin:0 auto;position:relative;line-height:0}
+#pageImage{display:block;width:100%;height:auto}
+.hot{position:absolute;display:block;background:transparent;border:0;cursor:pointer;padding:0}
+.hot:focus-visible{outline:3px solid rgba(255,255,255,.85);outline-offset:2px}
+#debug{position:fixed;top:8px;right:8px;z-index:50;background:#111d;color:#fff;
+font:12px/1.2 Arial,sans-serif;padding:7px 9px;border-radius:7px;line-height:1.2}
+</style>
+</head>
+<body>
+<div id="debug"></div>
+<div id="stage"><img id="pageImage" alt="Budgetbinders Potion Quest game page"></div>
+<script>
+const img=document.getElementById('pageImage'), stage=document.getElementById('stage'), debug=document.getElementById('debug');
+let page=Number(localStorage.getItem('bbTestPage')||1);
+let path=localStorage.getItem('binderPath')||'apprentice';
+
+const page4={apprentice:'page4a.png',scholar:'page4b.png',alchemist:'page4c.png',master:'page4d.png'};
+function hot(x,y,w,h,fn,label){
+ const b=document.createElement('button'); b.className='hot'; b.ariaLabel=label||'button';
+ Object.assign(b.style,{left:x+'%',top:y+'%',width:w+'%',height:h+'%'});
+ b.onclick=fn; stage.appendChild(b);
+}
+function go(n){page=n;localStorage.setItem('bbTestPage',String(n));render();scrollTo(0,0)}
+function setPath(p){path=p;localStorage.setItem('binderPath',p)}
+
+function render(){
+ [...stage.querySelectorAll('.hot')].forEach(x=>x.remove());
+ let file='';
+ if(page===1) file='page1.png';
+ if(page===2) file='page2.png';
+ if(page===3) file='page3.png';
+ if(page===4) file=page4[path];
+ if(page===5) file='page5.png';
+ img.src='assets/'+file;
+ debug.textContent=`Test: Page ${page}${page===4?' — '+path:''}`;
+
+ if(page===1){
+   hot(18,84,64,12,()=>go(2),'Begin');
+ } else if(page===2){
+   hot(15,92,70,7,()=>go(3),'Continue');
+ } else if(page===3){
+   // Four path rows. Selection is retained; bottom CTA proceeds to matching Page 4.
+   hot(8,32,84,11,()=>setPath('apprentice'),'Select Apprentice');
+   hot(8,44,84,11,()=>setPath('scholar'),'Select Scholar');
+   hot(8,56,84,11,()=>setPath('alchemist'),'Select Alchemist');
+   hot(8,68,84,11,()=>setPath('master'),'Select Master Budgetbinder');
+   hot(12,88,76,9,()=>go(4),'Start my quest');
+ } else if(page===4){
+   hot(67,48,24,10,()=>go(3),'Change path');
+   hot(12,78,76,8,()=>go(5),'Start my quest');
+ } else if(page===5){
+   hot(13,88,74,9,()=>alert('Page 5 reached successfully.'),'Start my quest');
+ }
+}
+render();
+</script>
+</body>
+</html>
